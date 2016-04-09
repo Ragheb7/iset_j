@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Connectez-vous pour accéder à e-iset Jendouba </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="js/jquery-1.12.2.min.js" type="text/javascript" ></script>
+
+    </head>
+    <body>
+        <div id="new-header">
+            <script>
+                $("#new-header").load("header.html");</script>
+        </div>
+
+
+
+        <div class="row" id="Divrow" style="margin-top: 10px; margin-bottom: 10px;">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+
+                    <img src="img/userEtdlogo.jpg" id="imgEdu">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Enter Votre E-mail" aria-describedby="basic-addon2" id="email">
+                        <span class="input-group-addon" id="basic-addon2">@example.com</span>
+
+                    </div>
+                    <div class="caption" align="center">
+
+                        <button type="button" id="myButton" data-loading-text="Suivant..." class="btn btn-primary" autocomplete="off" onclick="VerifMail()">
+                            Suivant
+                        </button>
+
+                    </div>
+                    <div id="msg"></div>
+                    <script type="text/javascript">
+
+                        function VerifMail() {
+                            var a = document.getElementById('email').value;
+
+                            if (a.equals("")) {
+                                var s = ' < div class = "alert alert-danger" role = "alert" > ';
+                                s += ' <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>';
+                                s += ' <span class="sr-only">Error:</span>';
+                                s += 'Le champs est vide';
+                                s += '</div>';
+                                document.getElementById('msg').innerHTML = s ;
+                            }
+                        }
+                    </script>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <div id="new-footer">
+            <script>
+                $("#new-footer").load("footer.html");
+            </script>
+        </div>
+
+
+    </body>
+</html>

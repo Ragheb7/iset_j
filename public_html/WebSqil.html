@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Web SQL </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body onload="init()">
+        
+        <div id="resultat"></div>
+        <br><br>
+        <fieldset>
+            <legend>add personne </legend>
+            <form>
+                <table cellpadding="2" cellspacing="2">
+                    <tr>
+                        <td> name </td>
+                        <td> <input type="text" id="PerName"> </td>
+                    </tr>
+                     <tr>
+                        <td> prenom </td>
+                        <td> <input type="text" id="PerPrenom"></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp </td>
+                        <td>
+                            <input type="button" value="Add" onclick="add()"> 
+                            <input type="button" value="modifier" onclick="save()">
+                            <input type="hidden" id="id" value="modifier">
+                        </td>
+                    </tr>
+                    
+                    
+                </table>
+                
+            </form> 
+        </fieldset>
+        
+        
+        
+        <script type="text/javascript">
+            var db = openDatabase('ma_base','1.0','my base',5000);
+            
+            function init(){
+                db.transaction( function (tx) {
+                   tx.executeSql('create table if not exists mabase(ID INTEGER PRIMARY KEY AUTOINCREMENT,name text,prenom text)'); 
+                });
+            }
+            function displayAll(){
+                db.transaction( function (tx) {
+                   tx.executeSql('select * from mabase', [] , function (tx,resultat){
+                    var n = resultat.rows.length;
+                    var s = '<table cellpadding="2" cellspacing="2" border="1"> ';
+                       s += '<tr> <th>id</th> <th>name</th> <th>prénom</th> <tr>';
+                    for (var i=0; i<n ;i++){
+                        var rs = resultat.rows.item(i);
+                        s += '<tr>';
+                        s += '<td>'+rs.id +'</td>';
+                        s += '<td>'+rs.name +'</td>';
+                        s += '<td>'+rs.prenom +'</td>';
+                        s += '<td> <a href="#" onclick="del(' + rs.id + ')"> Delete </a> | <a href="#" onclick="edit('+rs.id+')"> Edit </a></td>';
+                        s += '</tr>'; 
+                    }
+                    s += '</table>';
+                    document.getElementById('resultat').innerHTML = s;
+                   }); 
+                });
+            }
+            function add(){
+                db.transaction( function (tx) {
+                    var nom = document.getElementById('PerName').value  ;
+                    var pre = document.getElementById('PerPrenom').value ;
+                    tx.executeSql('insert into mabase(name, prenom) values(?,?)',[nom,pre], displayAll() );
+                });
+            }
+            function del(id){
+                db.transaction( function (tx) {
+                    var resultat = confirm('Vous avez sur quitter ?');
+                    if ( resultat === true ){
+                   tx.executeSql('delete from mabase where id = ?',[id], displayAll() ); 
+                    }
+                });
+            }
+            function edit(id){
+                 db.transaction( function (tx) {
+                 tx.executeSql('select * from mabase where id = ?', [id] , function (tx , resultat){
+                     var rs = resultat.rows.item(0);
+                     document.getElementById('id').value = rs.id ;
+                     document.getElementById('PerName').value = rs.name  ;
+                     document.getElementById('PerPrenom').value = rs.prenom ;
+                 });
+                 
+                });
+            }
+            function save(){
+                db.transaction( function (tx) {
+                  var id = document.getElementById('id').value ;
+                  var name = document.getElementById('PerName').value ;
+                  var prenom = document.getElementById('PerPrenom').value ;
+                  tx.executeSql('update mabase set name = ? , prenom = ? where id = ?',[name,prenom,id], displayAll() );
+                });
+            }
+            
+        </script>
+    
+    </body>
+</html>
